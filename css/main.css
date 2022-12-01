@@ -16,4 +16,8 @@ body {
 }
 #player{
     background-color: darkred;
+    
+}
+.obstacle {
+    background-color:rgb(76, 79, 240);
 }

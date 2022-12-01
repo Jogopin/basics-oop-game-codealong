@@ -22,7 +22,7 @@ class Player{
            
         
         //movement of the player
-        this.movementAmount = 10
+        this.movementAmount = 2
         
         // creating the element in the html
         this.domElement = null; // carefull: create DomElement will assignt a diferent value to dom.Element
@@ -68,15 +68,12 @@ class Player{
             
         }
         this.domElement.style.left = this.positionX + this.unitsX
-        //not working for moving the element to the left
-        // const PlayerElm=document.querySelector(`#player`)
-        // console.log(this.positionX)
-        // PlayerElm.style.left=this.positionX
+        
 
 
     }   
     moveRight(){
-        if(this.positionX<100){
+        if(this.positionX<(100-this.width)){
             this.positionX += this.movementAmount
             }
         
@@ -89,8 +86,77 @@ class Player{
 }
 
 //***************************************/
+//********************************************************** */
+//***************************************************************************** */
+
+
+class Obstacle{
+    constructor(){
+        this.width = player.width*0.5
+        this.height= player.height*0.5
+        
+        //positon x and y in % 
+        
+        this.positionX = Math.random()*100 -(this.width);
+        this.positionY = 100 -this.height
+        
+        this.unitsY= `vh` 
+        this.unitsX = `vw`
+        
+        this.movementAmount = 2
+        
+        // creating the element in the html
+        this.domElement = null; // carefull: create DomElement will assignt a diferent value to dom.Element
+        this.createDomElement();
+    }
+    createDomElement(){
+        
+        //step1 create the element
+        this.domElement=document.createElement(`div`);
+        
+        //step2 add content or modify
+        this.domElement.className= `obstacle`;
+        
+        //step2.1 defining the size
+        this.domElement.style.margin=0
+        
+        
+        this.domElement.style.height =  this.height + this.unitsY
+        
+        this.domElement.style.width = this.width + this.unitsX 
+        
+        
+        //step2.2  position of the player
+        this.domElement.style.position = `absolute`
+        this.domElement.style.left =(this.positionX) + this.unitsX
+        this.domElement.style.bottom = this.positionY + this.unitsY
+        
+        
+        //step3
+        const boardElm= document.getElementById(`board`);
+        boardElm.appendChild(this.domElement);
+    }
+
+    moveDown(){
+        if(this.positionY>0){
+            this.positionY--;
+            this.domElement.style.bottom =this.positionY + this.unitsY
+        }
+        
+        
+    }
+
+}
+
+
+
 
 const player = new Player();
+const obstaclesArray=[]
+
+
+
+//attach event listeners
 document.addEventListener(`keydown`,function(event){
 
     if(event.key === "ArrowRight"){
@@ -101,6 +167,62 @@ document.addEventListener(`keydown`,function(event){
 
     }
 })
+
+
+
+
+// *************move obstacles****************//
+
+// *******************one way
+// setInterval(()=>{obstaclesArray.push(new Obstacle())},1000)
+// setInterval(()=>{obstaclesArray.forEach((elem)=>elem.moveDown())},50)
+
+
+//*********************bonus, doing it in the same interval
+
+// if we play with this time unit and the delay of intercalID01 we can 
+// start a general Interval and find multiples of the delay to make the
+// increase of time  by 1s(so it will make things easier if we have a lot 
+// of time conditions) 
+let timeUnit=1
+
+
+let time = 0
+
+
+const intervalID01=setInterval(()=>{
+    
+    time =time+timeUnit
+
+
+    //create obstacles
+    if(time%(40*timeUnit) ===0){
+        obstaclesArray.push(new Obstacle())
+    }
+   
+    
+    obstaclesArray.forEach((obstacleInstance)=>{
+        obstacleInstance.moveDown()
+        
+           //detect if there's a collision between player and current obstacle
+        if (
+            player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+            player.positionX + player.width > obstacleInstance.positionX &&
+            player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+            player.height + player.positionY > obstacleInstance.positionY
+        ) {
+            console.log("collision detected!!");
+        }
+    
+    })
+    
+
+    
+},50)
+
+
+
+
 
 
 /********************************Pruebas */
