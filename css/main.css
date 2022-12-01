@@ -1,3 +1,19 @@
 body {
-    background-color: rgb(129,255,158);
+    background-color: rgb(255, 255, 255);
+    margin:0;
+    padding:0;
+
+}
+
+#board{
+    position: relative;
+    /*solo definimos la altura porque al ser un div toma el 100% del width*/
+    
+    height: 100vh;
+    background-color: rgb(218, 145, 49);
+    /*margin:15vh;*//* if this is working we use height < 100ch*/
+    
+}
+#player{
+    background-color: darkred;
 }
