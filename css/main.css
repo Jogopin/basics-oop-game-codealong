@@ -4,20 +4,31 @@ body {
     padding:0;
 
 }
+/* #outside-frame{
+    margin:15vh;
+    height:70vh;
+    width:70vw;
+} */
 
 #board{
-    position: relative;
-    /*solo definimos la altura porque al ser un div toma el 100% del width*/
+    position:relative;
+    border: 15px solid black;
+    overflow:hidden;
+    margin:8rem auto;
     
-    height: 100vh;
+    height: 600px;
+    width: 800px;
+    
+    
+
     background-color: rgb(218, 145, 49);
-    /*margin:15vh;*//* if this is working we use height < 100ch*/
     
 }
 #player{
     background-color: darkred;
-    
+    position:absolute;
 }
 .obstacle {
+    position: absolute;
     background-color:rgb(76, 79, 240);
 }

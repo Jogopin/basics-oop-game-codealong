@@ -4,8 +4,8 @@ class Player{
     constructor(){
 
         // size of the player
-        this.width = 10;
-        this.height = 10;
+        this.width = 8;
+        this.height = 8*(4/3);
 
         //positon x and y in % 
         
@@ -16,13 +16,13 @@ class Player{
            
         //measurement units
         
-            this.unitsY= `vh` 
-            this.unitsX = `vw`
+            this.unitsY= `%` 
+            this.unitsX = `%`
 
            
         
         //movement of the player
-        this.movementAmount = 2
+        this.movementAmount = 1.5
         
         // creating the element in the html
         this.domElement = null; // carefull: create DomElement will assignt a diferent value to dom.Element
@@ -39,22 +39,18 @@ class Player{
         this.domElement.id= `player`;
 
         //step2.1 defining the size
-            this.domElement.style.margin=0
-           
-            // we use % so the player is always relative to the screen
-            this.domElement.style.height =  this.height + this.unitsY
+                       
+            //we have a fixed board, so our player and other objects
+            //are define by the % of the board
+            this.domElement.style.height =  this.height + `%`
             
-            this.domElement.style.width = this.width + this.unitsX // I` want to force it to be a square but i dont know how
+            this.domElement.style.width = this.width + `%` // I` want to force it to be a square but i dont know how
             
-            //with margin on the board
-            //first attempt: doesnt work :(
-            // const playerSizeHeight = domElement.style.height
-            // console.log(playerSizeHeight) 
-            // domElement.style.width = playerSizeHeight
+        
         
         //step2.2  position of the player
-        this.domElement.style.position = `absolute`
-        this.domElement.style.left =this.positionX + this.unitsX
+        //this.domElement.style.position = `absolute` // this property is better in the css document
+        this.domElement.style.left =this.positionX + `%`
         this.domElement.style.bottom = this.positionY + this.unitsY
 
 
@@ -63,22 +59,28 @@ class Player{
         boardElm.appendChild(this.domElement);
     }
     moveLeft(){
-        if(this.positionX>0){
+        if(this.positionX-this.movementAmount>0){
             this.positionX -= this.movementAmount
             
+        }else if (this.positionX-this.movementAmount<=0){
+            this.positionX = 0
         }
-        this.domElement.style.left = this.positionX + this.unitsX
-        
+        this.domElement.style.left = this.positionX + `%`
+        console.log(this.positionX)
 
 
     }   
     moveRight(){
-        if(this.positionX<(100-this.width)){
-            this.positionX += this.movementAmount
-            }
         
-        this.domElement.style.left = this.positionX + this.unitsX
-
+        
+        if(this.positionX+this.width+this.movementAmount<(100)){
+            this.positionX += this.movementAmount
+        }else if(this.positionX+this.width+this.movementAmount>=100){
+            this.positionX = 100 -this.width
+        }
+        
+        this.domElement.style.left = this.positionX + `%`
+        console.log(this.positionX)
     }
     
 
@@ -92,18 +94,21 @@ class Player{
 
 class Obstacle{
     constructor(){
-        this.width = player.width*0.5
-        this.height= player.height*0.5
+        this.width = player.width*1.5*(Math.random()+0.5)
+        this.height= player.height*1.5*(Math.random()+0.5)
         
         //positon x and y in % 
-        
-        this.positionX = Math.random()*100 -(this.width);
         this.positionY = 100 -this.height
+        this.positionX = Math.random()*100;
+        //randomize the creation of obstacles inside the board in the X axis
+        if(this.positionX<0) this.positionX=0
+        if(this.positionX+this.width>100) this.positionX=100-this.width
         
-        this.unitsY= `vh` 
-        this.unitsX = `vw`
         
-        this.movementAmount = 2
+        this.unitsY= `%` 
+        this.unitsX = `%`
+        
+        this.movementAmount = 0.3
         
         // creating the element in the html
         this.domElement = null; // carefull: create DomElement will assignt a diferent value to dom.Element
@@ -126,9 +131,9 @@ class Obstacle{
         this.domElement.style.width = this.width + this.unitsX 
         
         
-        //step2.2  position of the player
-        this.domElement.style.position = `absolute`
-        this.domElement.style.left =(this.positionX) + this.unitsX
+        //step2.2  position of obstacle
+        
+        this.domElement.style.left =this.positionX + this.unitsX
         this.domElement.style.bottom = this.positionY + this.unitsY
         
         
@@ -138,10 +143,10 @@ class Obstacle{
     }
 
     moveDown(){
-        if(this.positionY>0){
-            this.positionY--;
+        
+            this.positionY-=this.movementAmount;
             this.domElement.style.bottom =this.positionY + this.unitsY
-        }
+        
         
         
     }
@@ -212,13 +217,21 @@ const intervalID01=setInterval(()=>{
             player.height + player.positionY > obstacleInstance.positionY
         ) {
             console.log("collision detected!!");
+            //locatioon.href=`gameover.html` // to redirect to another page
         }
+            //check if we need to remove an obstacle
+            if(obstacleInstance.positionY+obstacleInstance.height<0){
+                console.log(`remove obstacle `+obstacleInstance)
+                obstacleInstance.domElement.remove()
+                console.log(obstaclesArray.length)
+                obstaclesArray.shift()
+            }
     
     })
     
 
     
-},50)
+},16.66)
 
 
 
